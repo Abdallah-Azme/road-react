@@ -60,14 +60,21 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
     if (step > 1) setStep(step - 1);
   };
 
-  const toggleCategoryValue = (id: number) => {
+  const selectCategoryValue = (valuesInGroup: number[], selectedId: number) => {
     setData((prev) => {
-      const current = prev.categoryValues || [];
-      return {
-        ...prev,
-        categoryValues: current.includes(id) ? current.filter(i => i !== id) : [...current, id]
-      };
+      let current = prev.categoryValues || [];
+      // Remove any values that belong to this group to enforce single selection
+      current = current.filter(id => !valuesInGroup.includes(id));
+      // Add the new selection
+      current.push(selectedId);
+      return { ...prev, categoryValues: current };
     });
+    
+    // Auto advance
+    setTimeout(() => {
+        if (step < totalSteps) setStep(step + 1);
+        else handleFinish();
+    }, 150);
   };
 
   const saveAndComplete = async (finalData: typeof data) => {
@@ -205,7 +212,10 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
                                     key={c.id}
                                     onClick={() => {
                                         setData({ ...data, areaId: c.id, areaName: c.name });
-                                        setTimeout(() => setStep(5), 150);
+                                        setTimeout(() => {
+                                            if (5 <= totalSteps) setStep(5);
+                                            else handleFinish();
+                                        }, 150);
                                     }}
                                     className={`p-4 h-16 rounded-2xl border-2 transition-all font-bold flex items-center justify-between active:scale-95 ${
                                         data.areaId === c.id ? "border-navy bg-navy/5 text-navy" : "border-pale bg-white text-navy hover:border-navy/20"
@@ -236,7 +246,10 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
                                             return (
                                                 <button
                                                     key={v.id}
-                                                    onClick={() => toggleCategoryValue(v.id)}
+                                                    onClick={() => {
+                                                        const allIds = filters[step - 5].values.map(val => val.id);
+                                                        selectCategoryValue(allIds, v.id);
+                                                    }}
                                                     className={`px-4 py-2 rounded-full border-2 transition-all font-bold text-sm active:scale-95 ${
                                                         isSelected 
                                                             ? "border-navy bg-navy text-white shadow-md shadow-navy/20" 
@@ -257,22 +270,15 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-bg via-bg to-transparent z-10 flex gap-3">
-            {(step === 1 && !isEditMode) || (step >= 5 && step < totalSteps) ? (
+            {step === 1 && !isEditMode ? (
                 <button 
                     onClick={handleNext}
-                    disabled={step === 1 && !data.name.trim()}
+                    disabled={!data.name.trim()}
                     className={`flex-1 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
-                        (step > 1 || (step === 1 && data.name.trim())) ? 'bg-navy shadow-navy/20 active:scale-95 hover:bg-blue' : 'bg-gray-300 cursor-not-allowed'
+                        data.name.trim() ? 'bg-navy shadow-navy/20 active:scale-95 hover:bg-blue' : 'bg-gray-300 cursor-not-allowed'
                     }`}
                 >
                     التالي
-                </button>
-            ) : step === totalSteps ? (
-                <button 
-                    onClick={handleFinish}
-                    className="flex-1 py-4 rounded-xl font-bold text-white bg-navy shadow-lg shadow-navy/20 active:scale-95 hover:bg-blue transition-all"
-                >
-                    حفظ وإكمال التصفح
                 </button>
             ) : null}
 
