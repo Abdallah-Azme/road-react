@@ -14,7 +14,8 @@ interface QuickWizardProps {
 
 const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
   const searchParams = new URLSearchParams(window.location.search);
-  const isEditMode = searchParams.get('mode') === 'edit';
+  const mode = searchParams.get('mode'); // 'edit' | 'location' | null
+  const isEditMode = mode === 'edit' || mode === 'location';
   
   const [step, setStep] = useState(isEditMode ? 2 : 1);
   const [data, setData] = useState({
@@ -74,6 +75,7 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
           purpose: 'للإيجار', // Fallback defaults like Next.js
           area: finalData.areaName || finalData.governorateName,
           countryId: finalData.countryId || undefined,
+          countryName: finalData.countryName || '',
           stateId: finalData.governorateId || undefined,
           cityId: finalData.areaId || undefined,
           categoryValues: finalData.categoryValues || [],

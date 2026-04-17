@@ -11,18 +11,7 @@ const FALLBACK_SLIDER_IMAGES = [
   'https://raiyansoft.com/wp-content/uploads/2026/02/3.jpg'
 ];
 
-const COUNTRIES = [
-  { code: 'KW', name: 'الكويت', flag: '🇰🇼' },
-  { code: 'SA', name: 'السعودية', flag: '🇸🇦' },
-  { code: 'AE', name: 'الإمارات', flag: '🇦🇪' },
-  { code: 'QA', name: 'قطر', flag: '🇶🇦' },
-  { code: 'BH', name: 'البحرين', flag: '🇧🇭' },
-  { code: 'OM', name: 'عُمان', flag: '🇴🇲' },
-  { code: 'SY', name: 'سوريا', flag: '🇸🇾' },
-  { code: 'EG', name: 'مصر', flag: '🇪🇬' },
-  { code: 'JO', name: 'الأردن', flag: '🇯🇴' },
-  { code: 'TR', name: 'تركيا', flag: '🇹🇷' },
-];
+
 
 const QUICK_ACTIONS = [
   { id: 'rent', label: 'إيجار', icon: KeyIcon },
@@ -158,14 +147,14 @@ const HomePage: React.FC<{ theme: 'light' | 'dark'; onToggleTheme: () => void }>
   const displayAds = homeListings.slice(0, 6);
 
   const [searchText, setSearchText] = useState('بيت / بيان');
-  const [countryOpen, setCountryOpen] = useState(false);
-  const [currentCountry, setCurrentCountry] = useState(COUNTRIES[0]);
+  const [currentCountryName, setCurrentCountryName] = useState('الكويت');
 
   useEffect(() => {
     const prefs = localStorage.getItem('road80_preferences');
     if (prefs) {
         try {
             const p = JSON.parse(prefs);
+            if (p.countryName) setCurrentCountryName(p.countryName);
             if (p.propertyType && p.purpose && p.area) {
                 setSearchText(`${p.propertyType} / ${p.purpose} / ${p.area}`);
             }
@@ -175,23 +164,17 @@ const HomePage: React.FC<{ theme: 'light' | 'dark'; onToggleTheme: () => void }>
     }
   }, []);
 
-  const handleCountrySelect = (c: typeof COUNTRIES[0]) => {
-      setCurrentCountry(c);
-      setCountryOpen(false);
-  };
-
   return (
     <div className="flex flex-col p-4 gap-6 animate-fade-in pt-2">
       {/* Country Switcher Header with Theme Toggle */}
       <div className="flex items-center justify-between -mb-2">
-         <div className="flex flex-col">
+      <div className="flex flex-col">
             <span className="text-xs text-gray-400 font-bold mb-0.5">الدولة</span>
             <button 
-              onClick={() => setCountryOpen(true)}
+              onClick={() => navigate({ to: '/quick-start', search: { mode: 'location' } as any })}
               className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-pale dark:border-slate-800 rounded-full pl-3 pr-2 py-1 shadow-sm active:scale-95 transition-all duration-300"
             >
-               <span className="text-lg leading-none">{currentCountry.flag}</span>
-               <span className="text-sm font-bold text-navy dark:text-slate-200">{currentCountry.name}</span>
+               <span className="text-sm font-bold text-navy dark:text-slate-200">{currentCountryName}</span>
                <ChevronDownIcon className="w-3 h-3 text-blue" />
             </button>
          </div>
@@ -296,38 +279,6 @@ const HomePage: React.FC<{ theme: 'light' | 'dark'; onToggleTheme: () => void }>
       {/* Bottom Banner (Static) */}
       <StaticBanner image={homeData?.footer?.[0]?.image} />
 
-      {/* Country Selection Modal */}
-      {countryOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ zIndex: 100 }}>
-            <div className="absolute inset-0 bg-black/40 dark:bg-black/70 backdrop-blur-sm animate-fade-in" onClick={() => setCountryOpen(false)} />
-            <div className="relative bg-white dark:bg-slate-900 w-full max-w-sm mx-auto sm:rounded-2xl rounded-t-3xl p-6 flex flex-col gap-4 shadow-2xl animate-fade-in max-h-[80vh] overflow-hidden border-t dark:border-slate-800">
-                <div className="w-12 h-1.5 bg-gray-200 dark:bg-slate-800 rounded-full mx-auto mb-2 shrink-0" />
-                <h3 className="text-lg font-bold text-navy dark:text-slate-200 text-center mb-2 shrink-0">اختر الدولة</h3>
-                
-                <div className="flex flex-col gap-2 overflow-y-auto no-scrollbar pb-6">
-                    {COUNTRIES.map(c => (
-                        <button 
-                            key={c.code}
-                            onClick={() => handleCountrySelect(c)}
-                            className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
-                                currentCountry.code === c.code 
-                                ? 'border-navy dark:border-blue bg-navy/5 dark:bg-blue/10' 
-                                : 'border-pale dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800'
-                            }`}
-                        >
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">{c.flag}</span>
-                                <span className="font-bold text-navy dark:text-slate-200">{c.name}</span>
-                            </div>
-                            {currentCountry.code === c.code && (
-                                <div className="w-2.5 h-2.5 rounded-full bg-navy dark:bg-blue shadow-sm" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-            </div>
-        </div>
-      )}
     </div>
   );
 };
