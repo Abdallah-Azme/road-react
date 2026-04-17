@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="https://raiyansoft.com/wp-content/uploads/2026/02/sg54.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <title>80road</title>
+    
+    <!-- Theme Initialization Script -->
+    <script>
+      (function() {
+        // Default to Light Mode. Only enable Dark Mode if explicitly saved.
+        const theme = localStorage.getItem('road80_theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              navy: '#3e689b', // Main Brand Color
+              blue: '#5b84b8', // Secondary / Accent
+              mid: '#82a3cc',
+              light: '#a9c2e0',
+              pale: '#e1eaf5',
+              bg: '#f5f8fa',
+            },
+            fontFamily: {
+              sans: [
+                '-apple-system', 
+                'BlinkMacSystemFont', 
+                '"Segoe UI"', 
+                'Roboto', 
+                '"Helvetica Neue"', 
+                'Arial', 
+                'sans-serif'
+              ],
+            },
+            fontSize: {
+              // Scaled by 1.3x
+              xs: ['0.975rem', { lineHeight: '1.5rem' }],    // was 0.75rem (12px -> ~15.6px)
+              sm: ['1.1375rem', { lineHeight: '1.75rem' }],  // was 0.875rem (14px -> ~18.2px)
+              base: ['1.3rem', { lineHeight: '2rem' }],      // was 1rem (16px -> ~20.8px)
+              lg: ['1.4625rem', { lineHeight: '2rem' }],     // was 1.125rem (18px -> ~23.4px)
+              xl: ['1.625rem', { lineHeight: '2.25rem' }],   // was 1.25rem (20px -> ~26px)
+              '2xl': ['1.95rem', { lineHeight: '2.5rem' }],  // was 1.5rem (24px -> ~31.2px)
+              '3xl': ['2.4375rem', { lineHeight: '3rem' }],  // was 1.875rem (30px -> ~39px)
+              '4xl': ['2.925rem', { lineHeight: '1.2' }],     // was 2.25rem (36px -> ~46.8px)
+            },
+            animation: {
+              'spin-slow': 'spin 3s linear infinite',
+              'fade-out': 'fadeOut 0.5s ease-in-out forwards',
+              'fade-in': 'fadeIn 0.5s ease-in-out forwards',
+              'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
+              'draw': 'draw 0.6s ease-out forwards',
+              'scale-in': 'scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+            },
+            keyframes: {
+              fadeOut: {
+                '0%': { opacity: '1' },
+                '100%': { opacity: '0', visibility: 'hidden' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              draw: {
+                'to': { 'stroke-dashoffset': '0' }
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.5)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --vh: 1vh;
+        --header-h: 64px;
+        --tab-h: 70px;
+        --primary: #3e689b;
+      }
+      /* Global scrollbar hiding for app-like feel */
+      * {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+      
+      *::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+        background: transparent;
+      }
+
+      /* Fix iOS Safari extra top space & height */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100vh; /* Fallback */
+        height: calc(var(--vh, 1vh) * 100);
+        overflow: hidden;
+        background-color: #f5f8fa;
+        transition: background-color 0.3s ease;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .dark body {
+        background-color: #0f172a;
+      }
+
+      body {
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+    </style>
+    <script>
+      // Reliable fix for iOS Safari's dynamic viewport height
+      const setVh = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      };
+      window.addEventListener('resize', setVh);
+      window.addEventListener('orientationchange', setVh);
+      setVh();
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+
+</head>
+  <body class="bg-bg sm:bg-slate-100 dark:sm:bg-slate-950 m-0 p-0 text-navy dark:text-slate-300 font-sans antialiased transition-colors duration-300">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
