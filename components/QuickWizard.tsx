@@ -129,7 +129,7 @@ const QuickWizard: React.FC<QuickWizardProps> = ({ onComplete }) => {
             <div className="w-full h-1.5 bg-pale rounded-full overflow-hidden mb-8">
                 <div 
                     className="h-full bg-navy transition-all duration-500 rounded-full"
-                    style={{ width: `${(step / totalSteps) * 100}%` }}
+                    style={{ width: `${((step - initialStep) / (totalSteps - initialStep)) * 100}%` }}
                 />
             </div>
         </div>

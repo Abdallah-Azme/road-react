@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--
+  ExportOptions.plist — Xcode Archive Export Configuration
+  =========================================================
+  This file is referenced by the `xcodebuild -exportArchive` command in codemagic.yaml.
+  It controls how the IPA is exported from the archive for App Store submission.
+
+  REQUIRED SETUP:
+  1. Replace YOUR_TEAM_ID with your Apple Developer Team ID
+     (found in Apple Developer Portal → Membership → Team ID, or in Xcode Signing settings)
+
+  2. The provisioningProfiles key maps bundle ID → provisioning profile name.
+     The profile must match what you upload to Codemagic → App Settings → Code Signing.
+
+  3. This file should be committed to the repo — it contains no secrets.
+     The actual certificate and profile are managed by Codemagic secrets.
+-->
+<dict>
+	<!-- 'app-store' = signed for App Store / TestFlight submission.
+	     Other valid values: 'development', 'ad-hoc', 'enterprise' -->
+	<key>method</key>
+	<string>app-store</string>
+
+	<!-- Your Apple Developer Team ID (10-character alphanumeric string) -->
+	<key>teamID</key>
+	<string>YOUR_TEAM_ID</string>
+
+	<!-- Map of bundle ID → provisioning profile name.
+	     The profile name must exactly match what is shown in Xcode / Apple Developer Portal. -->
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.eightyroad.app</key>
+		<string>80road App Store Distribution</string>
+	</dict>
+
+	<!-- Signing certificate type. 'Apple Distribution' covers both
+	     App Store and TestFlight exports. -->
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
+
+	<!-- Let Xcode manage entitlements automatically -->
+	<key>signingStyle</key>
+	<string>manual</string>
+
+	<!-- Strip Swift standard libraries not used by the app to reduce IPA size -->
+	<key>stripSwiftSymbols</key>
+	<true/>
+
+	<!-- Compress the exported package for faster upload to App Store Connect -->
+	<key>uploadBitcode</key>
+	<false/>
+
+	<!-- Generate symbols file for App Store crash report symbolication -->
+	<key>uploadSymbols</key>
+	<true/>
+
+	<!-- Destination for the xcodebuild -exportArchive output -->
+	<key>destination</key>
+	<string>export</string>
+</dict>
+</plist>

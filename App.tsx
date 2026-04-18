@@ -12,6 +12,7 @@ import AuthPage from './components/AuthPage';
 import QuickWizard from './components/QuickWizard';
 import Header from './components/Header';
 import { Tab, Listing } from './types';
+import { initializePushNotifications } from './shared/utils/notifications';
 
 // Duplicate category map for Title resolution
 const CATEGORY_NAMES: Record<string, string> = {
@@ -67,6 +68,11 @@ const App: React.FC = () => {
     }
 
     return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  // Initialize Native Push Notifications
+  useEffect(() => {
+    initializePushNotifications();
   }, []);
 
   // Parse Route

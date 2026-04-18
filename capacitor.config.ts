@@ -1,32 +1,61 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const config: CapacitorConfig = {
-  appId: 'com.road80.app',
+  // ── Store Identity ─────────────────────────────────────────────────────────
+  // This MUST match the applicationId in android/app/build.gradle and
+  // the Bundle Identifier in the iOS App Store Connect entry.
+  appId: 'com.eightyroad.app',
   appName: '80road',
   webDir: 'dist',
+  
+  // ── Development Server (Live Reload) ───────────────────────────────────────
+  ...(isDev && {
+    server: {
+      cleartext: true,
+    },
+  }),
+
   plugins: {
+    PushNotifications: {
+      // Controls how notifications are presented when the app is in the foreground (iOS).
+      presentationOptions: ['badge', 'sound', 'alert'],
+    },
+
     SplashScreen: {
       launchShowDuration: 2000,
       launchAutoHide: true,
-      backgroundColor: '#f5f8fa',
+      backgroundColor: '#1a2744',
       androidSplashResourceName: 'splash',
       androidScaleType: 'CENTER_CROP',
       showSpinner: false,
       splashFullScreen: true,
       splashImmersive: true,
     },
+
     StatusBar: {
       style: 'LIGHT',
-      backgroundColor: '#3e689b',
+      backgroundColor: '#1a2744',
     },
+
     Keyboard: {
       resize: 'body',
       style: 'DARK',
       resizeOnFullScreen: true,
     },
   },
+
   android: {
     allowMixedContent: true,
+    backgroundColor: '#FFFFFF',
+    loggingBehavior: isDev ? 'debug' : 'none',
+  },
+
+  ios: {
+    backgroundColor: '#FFFFFF',
+    loggingBehavior: isDev ? 'debug' : 'none',
+    scheme: 'App',
   },
 };
 

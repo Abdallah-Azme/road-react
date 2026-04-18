@@ -10,6 +10,7 @@ import { postAdService } from '../features/post-ad/services/post-ad.service';
 import { Category } from '../features/post-ad/services/post-ad.service';
 import { Country } from '../shared/types/country';
 import { toast } from 'sonner';
+import { checkMediaPermissions } from '../shared/utils/media-permissions';
 
 interface AddWizardProps {
   onComplete: () => void;
@@ -458,6 +459,13 @@ const AddWizard: React.FC<AddWizardProps> = ({ onComplete }) => {
               </div>
               <input
                 type="file" accept="video/*" className="hidden"
+                onClick={async (e) => {
+                  const granted = await checkMediaPermissions();
+                  if (!granted) {
+                    e.preventDefault();
+                    toast.error('يرجى منح صلاحية الوصول للكاميرا والملفات');
+                  }
+                }}
                 onChange={e => { if (e.target.files?.[0]) handleVideoSelect(e.target.files[0]); }}
               />
             </label>
@@ -485,6 +493,13 @@ const AddWizard: React.FC<AddWizardProps> = ({ onComplete }) => {
               <PlusIcon className="w-8 h-8 text-gray-300" />
               <input
                 type="file" accept="image/*" multiple className="hidden"
+                onClick={async (e) => {
+                  const granted = await checkMediaPermissions();
+                  if (!granted) {
+                    e.preventDefault();
+                    toast.error('يرجى منح صلاحية الوصول للكاميرا والملفات');
+                  }
+                }}
                 onChange={e => {
                   if (e.target.files) {
                     setImages(prev => [...prev, ...Array.from(e.target.files!)]);

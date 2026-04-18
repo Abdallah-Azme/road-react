@@ -1,23 +1,44 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.road80.app"
+    namespace = "com.eightyroad.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.road80.app"
+        // ── Store Identity ──────────────────────────────────────────────────
+        // Must match capacitor.config.ts appId and Google Play Console entry.
+        applicationId "com.eightyroad.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // versionCode was 3 in old (80road-next) project — bumped to 4 for this upload.
+        versionCode 4
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        release {
+            // Updated to use project properties from gradle.properties or command line
+            storeFile file(project.findProperty('ANDROID_KEYSTORE_PATH') ?: "release.keystore")
+            storePassword project.findProperty('ANDROID_KEYSTORE_PASSWORD') ?: ""
+            keyAlias project.findProperty('ANDROID_KEY_ALIAS') ?: ""
+            keyPassword project.findProperty('ANDROID_KEY_PASSWORD') ?: ""
         }
     }
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Signing is applied when credentials are provided in gradle.properties
+            if (project.hasProperty('ANDROID_KEYSTORE_PASSWORD')) {
+                signingConfig signingConfigs.release
+            }
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -40,15 +61,12 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+
+    // Firebase BoM — manages consistent versions across all Firebase libraries.
+    // @capacitor/push-notifications uses FCM on Android under the hood.
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }
 
 apply from: 'capacitor.build.gradle'
-
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
-}
+apply plugin: 'com.google.gms.google-services'

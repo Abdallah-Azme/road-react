@@ -5,14 +5,14 @@
  * or dynamically on the server.
  */
 
-// If Mobile Builder set this, we check NEXT_PUBLIC_IS_MOBILE.
-const IS_MOBILE = process.env.NEXT_PUBLIC_IS_MOBILE === 'true';
+// In Vite, we check VITE_IS_MOBILE.
+const IS_MOBILE = import.meta.env.VITE_IS_MOBILE === 'true';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executeAction<T>(key: string, data?: any): Promise<T> {
   if (IS_MOBILE) {
     // We are on a purely static frontend (Capacitor/Mobile). Communicate over network.
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portal.road-80.com/api';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://portal.road-80.com/api';
 
     // Retrieve auth token for protected actions
     const { authStorage } = await import('@/shared/utils/auth-storage');

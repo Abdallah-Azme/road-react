@@ -15,7 +15,6 @@
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"
             android:exported="true">
-
             <!-- Default launcher intent -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,9 +34,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="https"
-                    android:host="80road.raiyansoft.net" />
+                <data android:scheme="https" android:host="80road.raiyansoft.net" />
             </intent-filter>
 
             <!-- HTTP fallback -->
@@ -45,9 +42,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="http"
-                    android:host="80road.raiyansoft.net" />
+                <data android:scheme="http" android:host="80road.raiyansoft.net" />
             </intent-filter>
         </activity>
 
@@ -63,4 +58,14 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- Camera and Photo/Video Upload Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- Firebase Push Notification Permission (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

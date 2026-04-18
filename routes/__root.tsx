@@ -8,6 +8,7 @@ import { AppContext } from '../components/AppContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { App as CapApp } from '@capacitor/app';
+import { initializePushNotifications } from '../shared/utils/notifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -106,6 +107,11 @@ function RootComponent() {
     return () => {
       listenerHandle?.remove();
     };
+  }, []);
+
+  // Initialize push notifications
+  useEffect(() => {
+    initializePushNotifications();
   }, []);
 
   const routePath = location.pathname;
